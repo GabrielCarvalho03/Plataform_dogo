@@ -4,9 +4,21 @@ import ProfImage from "@/assets/image/prof-image";
 import { FormLogin } from "@/components/shared/form-login/login";
 import { FormRegister } from "@/components/shared/form-login/register";
 import { UseUserLogin } from "@/hooks/useLogin/user-login";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { isLogin } = UseUserLogin();
+  const [imageSize, setImageSize] = useState({ width: 200, height: 200 });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setImageSize(
+        window.innerWidth > 768
+          ? { width: 430, height: 222 }
+          : { width: 200, height: 200 }
+      );
+    }
+  }, []);
 
   return (
     <main className="min-h-svh  w-full bg-primary overflow-y-auto ">
@@ -23,8 +35,10 @@ export default function Home() {
 
           <div className="mt-36">
             <ProfImage
-              width={window?.innerWidth > 768 ? 430 : 200}
-              height={window?.innerWidth > 768 ? 222 : 200}
+              //@ts-ignore
+              width={imageSize.width}
+              //@ts-ignore
+              height={imageSize.height}
             />
           </div>
         </div>
