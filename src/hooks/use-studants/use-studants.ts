@@ -35,7 +35,19 @@ export const useUseStudants = create<IUserStudants>((set) => ({
     const { setIsLoading, handleGetStudants, setModalCreateStudant, studants } =
       useUseStudants.getState();
     const { user } = UseUserLogin.getState();
-    if (studants && studants?.length >= user.studentsAmount) {
+    if (user.studentsAmount == 0 && studants && studants?.length >= 5) {
+      toast.error(
+        "Limite free de alunos atingido, Atualize o plano para adicionar mais alunos!"
+      );
+
+      return;
+    }
+
+    if (
+      user.studentsAmount != 0 &&
+      studants &&
+      studants?.length >= user.studentsAmount
+    ) {
       toast.error("Limite de alunos atingido!");
 
       return;

@@ -1,4 +1,4 @@
 export interface IUserDashboard {
-  selecDashboard: "customer" | "challanger";
-  setSelectDashboard: (selectDashboard: "customer" | "challanger") => void;
+  selecDashboard: "Studant" | "Plan";
+  setSelectDashboard: (selectDashboard: "Studant" | "Plan") => void;
 }

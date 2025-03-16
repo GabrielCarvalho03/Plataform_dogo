@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { objStyle } from "./obj-style";
 import { Input } from "@/components/ui/input";

@@ -27,7 +27,7 @@ export function Students() {
   useEffect(() => {
     console.log("studants", studants?.length);
     if (!studants?.length) {
-      handleGetStudants({ uuid: user.uuid });
+      handleGetStudants({ uuid: user?.uuid });
     }
   }, []);
 

@@ -32,7 +32,6 @@ export type userObject = {
 
 export type IHandleGetUserByID = {
   uuid: string;
-  router: AppRouterInstance;
 };
 
 export interface ILogin {
@@ -56,5 +55,5 @@ export interface ILogin {
 
   handleGetUser: ({ data }: IHandleGetUser) => Promise<void>;
 
-  handleGetUserByID: ({ router, uuid }: IHandleGetUserByID) => Promise<void>;
+  handleGetUserByID: ({ uuid }: IHandleGetUserByID) => Promise<void>;
 }

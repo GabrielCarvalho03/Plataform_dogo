@@ -12,16 +12,38 @@ export default function InitialForm() {
   const { createMercadoPagoCheckout } = useMercadoPago();
   const { uuid } = useParams();
   const { user, handleGetUserByID } = UseUserLogin();
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    setInterval(() => {
-      if (user.studentsAmount === 0) {
-        handleGetUserByID({ uuid: String(uuid), router });
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsActive(false); // Quando a aba não está visível
       } else {
-        router.push("/dashboard");
+        setIsActive(true); // Quando a aba estiver visível
       }
-    }, 5000);
+    };
+
+    // Adiciona um event listener para visibilidade
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
+
+  useEffect(() => {
+    if (isActive) {
+      const intervalId = setInterval(() => {
+        if (user?.studentsAmount === 0) {
+          handleGetUserByID({ uuid: String(uuid) });
+        } else {
+          router.push("/dashboard");
+        }
+      }, 5000);
+
+      return () => clearInterval(intervalId); // Limpa o intervalo quando o componente desmontar
+    }
+  }, [isActive, user?.studentsAmount, uuid, router, handleGetUserByID]);
 
   const valorPorAluno = 49;
   const valorPrimeiros5Alunos = 220;
@@ -63,7 +85,7 @@ export default function InitialForm() {
               <Slider
                 className=""
                 defaultValue={[countAlunos]}
-                max={100}
+                max={15}
                 step={1}
                 min={5}
                 onChange={(value: any) =>

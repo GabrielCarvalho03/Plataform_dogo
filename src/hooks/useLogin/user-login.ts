@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import moment from "moment";
 import { nanoid } from "nanoid";
+import Cookies from "js-cookie";
 
 export const UseUserLogin = create<ILogin>((set) => ({
   isLogin: true,
@@ -40,12 +41,9 @@ export const UseUserLogin = create<ILogin>((set) => ({
       };
 
       const create = await axios.post("/api/users/create-user", user);
-      setUser(create.data.user);
-      if (create.data.user.studentsAmount === 0) {
-        router.push(`/initialForm/${user.uid}`);
-        return;
-      }
+      Cookies.set("uuid", user.uid, { expires: 365 });
 
+      setUser(create.data.user);
       router.push("/dashboard");
     } catch (error) {
       console.log("não foi possivel logar com email", error);
@@ -70,11 +68,10 @@ export const UseUserLogin = create<ILogin>((set) => ({
         createdAt: moment().format("DD/MM/YYYY"),
       };
       const createUser = await axios.post("/api/users/create-user", user);
+
+      Cookies.set("uuid", createUser.data.uuid, { expires: 365 });
+
       setUser(createUser.data.user);
-      if (createUser.data.user.studentsAmount === 0) {
-        router.push(`/initialForm/${user.uid}`);
-        return;
-      }
 
       router.push("/dashboard");
 
@@ -93,12 +90,9 @@ export const UseUserLogin = create<ILogin>((set) => ({
 
       const user = await axios.post("/api/users/get-user", data);
 
-      setUser(user.data.user);
+      Cookies.set("uuid", user.data.uuid, { expires: 365 });
 
-      if (user.data.user.studentsAmount === 0) {
-        router.push(`/initialForm/${user.data.user.uuid}`);
-        return;
-      }
+      setUser(user.data.user);
 
       router.push("/dashboard");
     } catch (err) {
@@ -108,15 +102,16 @@ export const UseUserLogin = create<ILogin>((set) => ({
     }
   },
 
-  handleGetUserByID: async ({ uuid, router }) => {
+  handleGetUserByID: async ({ uuid }) => {
     const { setUser, setIsLoading } = UseUserLogin.getState();
-
     try {
       setIsLoading(true);
       const user = await axios.post("/api/users/get-user-by-id", { uuid });
-      setUser(user.data.user);
+      setUser(user.data);
     } catch (err) {
       console.log("nao foi possivel encontrar usuario", err);
+    } finally {
+      setIsLoading(false);
     }
   },
 }));
